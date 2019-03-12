@@ -239,6 +239,11 @@ INPUT=/tmp/menu.sh.$$
 # Storage file for displaying cal and date command output
 OUTPUT=/tmp/output.sh.$$
 
+function init_pubkey {
+	cp setup/pubkey_example.sh setup/pubkey.sh
+	sed -i 's/XX_REPLACE_XX//g' setup/pubkey.sh
+}
+
 function start_komodo {
 	echo "Starting komodo ..."
 }

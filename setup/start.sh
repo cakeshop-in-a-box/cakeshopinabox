@@ -100,6 +100,7 @@ PRIVATE_IPV6=$PRIVATE_IPV6
 EOF
 
 # Start service configuration.
+init_pubkey
 source setup/pubkey.sh
 source setup/system.sh
 #source setup/ssl.sh
