@@ -7,6 +7,8 @@ Cakeshop-in-a-Box helps individuals and group  take back control of their econom
 
 **Please see [https://komodo-cakeshop.com](https://komodo-cakeshop.com) for the project's website and setup guide!**
 
+![Cakeshop - Welcome](https://raw.githubusercontent.com/imylomylo/cakeshopinabox/master/screenshots/cakeshop-welcome.png)
+
 * * *
 
 Project goals are to:
@@ -17,21 +19,34 @@ Project goals are to:
 * **Not** make a totally unhackable, NSA-proof server.
 * **Not** make something customizable by power users.
 
+
 The Box
 -------
 
 Cakeshop-in-a-Box turns a fresh Ubuntu 18.04 LTS 64-bit machine into a working blockchain server by installing and configuring various components.
 
-It is a one-click blockchain appliance. There are no user-configurable setup options. It "just works".
+It is a turnkey blockchain appliance. There are no user-configurable setup options. It "just works".
+
+	Setup
+![Cakeshop - Setup](https://raw.githubusercontent.com/imylomylo/cakeshopinabox/master/screenshots/cakeshop-hostname.png)
+
 
 The components installed are:
 
 * Custom blockchain platform by ([Komodo](http://komodoplatform.com/)) for building ecosystems.
 
+	Install
+![Cakeshop - Install](https://raw.githubusercontent.com/imylomylo/cakeshopinabox/master/screenshots/cakeshop-buidl-komodo.png)
+
+
 It also includes:
 
 * to do...
 * to do...
+
+	Sync & Run
+![Cakeshop - Sync](https://raw.githubusercontent.com/imylomylo/cakeshopinabox/master/screenshots/cakeshop-kmdice.png)
+![Cakeshop - Run](https://raw.githubusercontent.com/imylomylo/cakeshopinabox/master/screenshots/cakeshop-install-finish.png)
 
 Installation
 ------------
