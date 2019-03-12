@@ -44,6 +44,11 @@ Clone this repository:
 
 	$ git clone https://github.com/Komodo-Cakeshop/cakeshopinabox
 	$ cd cakeshopinabox
+	$ sudo setup/start.sh
+
+# Original Mail-In-a-Box Information
+
+The following is info from [Mail-In-a-Box](https://mailinabox.email) where I got the inspiration to create Cakeshop-In-a-Box.
 
 _Optional:_ Download Josh's PGP key and then verify that the sources were signed
 by him:
