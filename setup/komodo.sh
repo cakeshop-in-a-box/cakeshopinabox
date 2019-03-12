@@ -14,7 +14,7 @@ hide_output ./zcutil/fetch-params.sh
 echo "Updating to latest komodo src..."
 hide_output git pull
 echo "Buidling komodo..."
-#hide_output ./zcutil/build.sh -j$(nproc)
+hide_output ./zcutil/build.sh -j$(nproc)
 localrev=$(git rev-parse HEAD)
 sudo echo "KMD_BUILD_COMMIT=$localrev" >> /etc/cakeshopinabox.conf
 cd ~
