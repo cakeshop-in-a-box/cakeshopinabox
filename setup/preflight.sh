@@ -64,3 +64,6 @@ if [ "$ARCHITECTURE" != "x86_64" ] && [ "$ARCHITECTURE" != "i686" ]; then
 	echo "You are on your own."
 	echo
 fi
+#TEMP FIX
+#vultr bare bones ubuntu 18.04 needs this early on otherwise install stalls
+sudo apt-get update
