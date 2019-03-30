@@ -159,7 +159,7 @@ restart_service fail2ban
 echo
 echo "-----------------------------------------------"
 echo
-echo Your Cakeshop-in-a-Box is running with these blockchain parameters 1 per line
+echo Your komodo-in-a-box is running with these blockchain parameters 1 per line
 echo
 ps aux | grep komodod | grep -v grep | awk -F " " '{$1=$2=$3=$4=$5=$6=$7=$8=$9=$10=""; print $0 }'
 #echo Please log in to the control panel for further instructions at:

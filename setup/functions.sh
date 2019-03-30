@@ -241,23 +241,53 @@ OUTPUT=/tmp/output.sh.$$
 
 function init_pubkey {
 	cp setup/pubkey_example.sh setup/pubkey.sh
+	echo "Copied sample pubkey"
+	sleep 3
+	echo "Install dir is $INSTALL_DIR"
+	sleep 3
 	sed -i 's/XX_REPLACE_XX//g' setup/pubkey.sh
 }
 
 function start_komodo {
 	echo "Starting komodo ..."
-}
-
-function start_kmdice {
-	KMDICE=`ps aux | grep -i kmdice | grep -v grep `
-	if [ -z "$KMDICE" ]; then
+	sleep 2
+	if ! ps aux | grep -i "[k]omodod" ; then
+#	KMDICE=`ps aux | grep -i kmdice | grep -v grep`
+#	if [ -z "$KMDICE" ]; then
 		echo "Starting kmdice ... "
-		if [ -z "$pubkey" ]; then
+		if [ "$pubkey" == "" ]; then
 			echo "Starting KMDICE with no pubkey set"
 			hide_output komodod -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
+			sleep 3
 		else
 			echo "Starting KMDICE with pubkey $pubkey"
 			hide_output komodod -pubkey=$pubkey -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
+			sleep 3
 		fi
+	else
+		echo "Not starting KMDICE - already started"
+		sleep 4
+	fi
+}
+
+function start_kmdice {
+	echo "Starting KMDICE..."
+	sleep 2
+	if ! ps aux | grep -i "[k]mdice" ; then
+#	KMDICE=`ps aux | grep -i kmdice | grep -v grep`
+#	if [ -z "$KMDICE" ]; then
+		echo "Starting kmdice ... "
+		if [ "$pubkey" == "" ]; then
+			echo "Starting KMDICE with no pubkey set"
+			hide_output komodod -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
+			sleep 3
+		else
+			echo "Starting KMDICE with pubkey $pubkey"
+			hide_output komodod -pubkey=$pubkey -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
+			sleep 3
+		fi
+	else
+		echo "Not starting KMDICE - already started"
+		sleep 4
 	fi
 }

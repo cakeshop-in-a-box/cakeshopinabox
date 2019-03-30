@@ -17,6 +17,7 @@ echo "Buidling komodo..."
 hide_output ./zcutil/build.sh -j$(nproc)
 localrev=$(git rev-parse HEAD)
 sudo echo "KMD_BUILD_COMMIT=$localrev" >> /etc/cakeshopinabox.conf
+sleep 5
 cd ~
 if [ ! -d ".komodo" ]; then
 	echo "Creating komodo data dir .komodo"
@@ -24,9 +25,16 @@ if [ ! -d ".komodo" ]; then
 fi
 cd .komodo
 if [ ! -f komodo.conf ]; then
+	echo "Creating komodo.conf file"
 	touch komodo.conf
-	rpcuser=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 24 | head -n 1)
-	rpcpassword=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 24 | head -n 1)
+	echo "Creating a random user id"
+	rpcuser=$(dd bs=24 count=1 if=/dev/urandom | base64 | tr +/ _.)
+	sleep 3
+	echo "User created"
+	echo "Creating a random password"
+	rpcpassword=$(dd bs=24 count=1 if=/dev/urandom | base64 | tr +/ _.)
+	echo "Password created"
+	sleep 3
 	echo "rpcuser=$rpcuser" > komodo.conf
 	echo "rpcpassword=$rpcpassword" >> komodo.conf
 	echo "daemon=1" >> komodo.conf
@@ -35,11 +43,15 @@ if [ ! -f komodo.conf ]; then
 	chmod 0600 komodo.conf
 else
 	echo "Komodo config exists..."
+	sleep 5
 fi
 cd ~
 echo "Komodo will now be available from anywhere in the system"
 sudo ln -sf $KMD_SRC/src/komodo-cli /usr/local/bin/komodo-cli
 sudo ln -sf $KMD_SRC/src/komodod /usr/local/bin/komodod
+sleep 2
+echo "Get ready to select chains to sync!!"
+sleep 3
 
 while true
 do
@@ -51,9 +63,7 @@ dialog --clear  --help-button --backtitle "Start blockchain" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 15 50 4 \
-KMD "Sync & Start Komodo" \
 KMDICE "Sync & Start KMDICE" \
-CAKESHOP "Sync & Start CAKESHOP - KMD ARCADE" \
 Exit "Exit to the shell" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
