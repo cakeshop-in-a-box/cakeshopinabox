@@ -1,11 +1,13 @@
 Cakeshop-in-a-Box
 =============
 
-By [@imylomylo](https://github.com/imylomylo) and [contributors](https://github.com/Komodo-Cakeshop/cakeshopinabox/graphs/contributors).
+By [@imylomylo](https://github.com/imylomylo) and [contributors](https://github.com/cakeshopclouddev/komodo-in-a-box/graphs/contributors).
 
-Cakeshop-in-a-Box helps individuals and group  take back control of their economy by defining a one-click, easy-to-deploy blockchain+services server: a cakeshop in a box.
+Komodo-in-a-Box helps individuals and group  take back control of their economy by defining a one-click, easy-to-deploy blockchain+services server.  This is a continuation of the original cakeshop in a box project.
 
-**Please see [https://komodo-cakeshop.com](https://komodo-cakeshop.com) for the project's website and setup guide!**
+**Please see [https://cakeshop.dev/komodo-in-a-box](https://cakeshop.dev/komodo-in-a-box) for the project's website and setup guide!**
+
+**Below is the original content from cakeshopinabox & from mailinabox, where this project got it's inspiration**
 
 ![Cakeshop - Welcome](https://raw.githubusercontent.com/imylomylo/cakeshopinabox/master/screenshots/cakeshop-welcome.png)
 
