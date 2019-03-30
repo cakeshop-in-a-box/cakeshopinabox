@@ -1,4 +1,4 @@
-Cakeshop-in-a-Box
+Komodo-in-a-Box
 =============
 
 By [@imylomylo](https://github.com/imylomylo) and [contributors](https://github.com/cakeshopclouddev/komodo-in-a-box/graphs/contributors).
