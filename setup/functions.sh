@@ -291,3 +291,34 @@ function start_kmdice {
 		sleep 4
 	fi
 }
+
+function komodo_select_branch {
+BACKTITLE="Backtitle here"
+TITLE="Title here"
+MENU="Choose one of the following options:"
+
+OPTIONS=(beta "This branch receives monthly or quarterly updates"
+         dev "This branch is when new features are being tested - weekly"
+         jl777 "This branch is when new features are being written")
+
+KOMODOBRANCHCHOICE=$(dialog --clear \
+                --backtitle "$BACKTITLE" \
+                --title "$TITLE" \
+                --menu "$MENU" \
+                0 0 0 \
+                "${OPTIONS[@]}" \
+                2>&1 >/dev/tty)
+
+clear
+case $KOMODOBRANCHCHOICE in
+        beta)
+            echo "You chose Option BETA"
+            ;;
+        dev)
+            echo "You chose Option DEV"
+            ;;
+        jl777)
+            echo "You chose Option JL777"
+            ;;
+esac
+}

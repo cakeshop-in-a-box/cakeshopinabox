@@ -154,6 +154,21 @@ if [ -z "${PUBLIC_IPV6:-}" ]; then
 	fi
 fi
 
+if [ -z "${DEFAULT_KOMODO_BRANCH:-}" ]; then
+	# set, probably first run
+	DEFAULT_KOMODO_BRANCH="beta"
+fi
+
+if [ -z "${KOMODO_BRANCH:-}" ]; then
+	komodo_select_branch
+	echo "KOMODOBRANCHCHOICE: $KOMODOBRANCHCHOICE"
+
+  	if [ ! $KOMODOBRANCHCHOICE ]; then
+		# user hit ESC/cancel
+		exit
+	fi
+fi
+
 # Get the IP addresses of the local network interface(s) that are connected
 # to the Internet. We need these when we want to have services bind only to
 # the public network interfaces (not loopback, not tunnel interfaces).
