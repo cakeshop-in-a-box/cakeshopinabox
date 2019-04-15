@@ -270,6 +270,27 @@ function start_komodo {
 	fi
 }
 
+function start_pegs_REKT0 {
+	CHAIN="REKT0"
+	echo "${CHAIN} selected..."
+	sleep 2
+	if ! ps aux | grep -i "[r]ekt0" ; then
+		echo "Starting ${CHAIN} ... "
+		if [ "$pubkey" == "" ]; then
+			echo "Starting ${CHAIN} with no pubkey set"
+			hide_output komodod -ac_cbopret=7 -ac_prices="LTC, BCHABC, XMR, IOTA, ZEC, WAVES, LSK, DCR, RVN, DASH, XEM, BTS, ICX, HOT, STEEM, ENJ, STRAT" -ac_name=REKT0 -ac_cclib=prices -ac_cc=10777 -ac_reward=3000000000 -ac_supply=120000000 -ac_pubkey=039433dc3749aece1bd568f374a45da3b0bc6856990d7da3cd175399577940a775 -ac_perc=77777 -ac_blocktime=600 -addnode=5.9.102.210 &
+			sleep 3
+		else
+			echo "Starting ${CHAIN}  with pubkey $pubkey"
+			hide_output komodod -ac_cbopret=7 -ac_prices="LTC, BCHABC, XMR, IOTA, ZEC, WAVES, LSK, DCR, RVN, DASH, XEM, BTS, ICX, HOT, STEEM, ENJ, STRAT" -pubkey=$pubkey -ac_name=REKT0 -ac_cclib=prices -ac_cc=10777 -ac_reward=3000000000 -ac_supply=120000000 -ac_pubkey=039433dc3749aece1bd568f374a45da3b0bc6856990d7da3cd175399577940a775 -ac_perc=77777 -ac_blocktime=600 -addnode=5.9.102.210 &
+			sleep 3
+		fi
+	else
+		echo "Not starting ${CHAIN} - already started"
+		sleep 4
+	fi
+}
+
 function start_kmdice {
 	echo "Starting KMDICE..."
 	sleep 2
