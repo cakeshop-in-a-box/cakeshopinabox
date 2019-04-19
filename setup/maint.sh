@@ -1,4 +1,5 @@
 source setup/hush3.sh
+source setup/bsk.sh
 
 function submenu_maint {
 while true
@@ -11,9 +12,10 @@ dialog --clear  --help-button --backtitle "Cakeshop Console" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 25 60 14 \
-MAINT_HUSH "Get Info - KMDICE getinfo method" \
-MAINT_CHIPS "List Unspent UTXO - KMDICE listunspent" \
-MAINT_VERUS "Get Network Info - KMDICE getpeerinfo" \
+HUSH3 "Get Info - KMDICE getinfo method" \
+CHIPS "List Unspent UTXO - KMDICE listunspent" \
+VERUS "Get Network Info - KMDICE getpeerinfo" \
+CREATE "Create a new blockchain" \
 Back "Back a menu" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
@@ -21,9 +23,10 @@ menuitem=$(<"${INPUT}")
 
 # make decsion
 case $menuitem in
-	MAINT_HUSH) install_hush3;;
-	MAINT_CHIPS) install_chips;;
-	MAINT_VERUS) install_verus;;
+	HUSH3) install_hush3;;
+	CHIPS) install_chips;;
+	VERUS) install_verus;;
+	CREATE) bsk;;
 	Back) echo "Bye"; break;;
 esac
 done
