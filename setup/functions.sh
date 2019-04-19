@@ -386,8 +386,9 @@ function setup_devwallet {
   cat /root/.devwallet
   echo "Completed DEV wallet setup"
   sleep 1
-  hide_output curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'
-  sleep 1
+  RESULT=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+  echo "Result: $RESULT"
+  sleep 2
 }
 
 function stop_regtest {
