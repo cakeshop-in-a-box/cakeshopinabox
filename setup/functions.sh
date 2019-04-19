@@ -248,36 +248,12 @@ function init_pubkey {
 	sed -i 's/XX_REPLACE_XX//g' setup/pubkey.sh
 }
 
-function start_komodo {
-	echo "Starting komodo ..."
-	sleep 2
-	if ! ps aux | grep -i "[k]omodod" ; then
-#	KMDICE=`ps aux | grep -i kmdice | grep -v grep`
-#	if [ -z "$KMDICE" ]; then
-		echo "Starting kmdice ... "
-		if [ "$pubkey" == "" ]; then
-			echo "Starting KMDICE with no pubkey set"
-			hide_output komodod -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
-			sleep 3
-		else
-			echo "Starting KMDICE with pubkey $pubkey"
-			hide_output komodod -pubkey=$pubkey -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
-			sleep 3
-		fi
-	else
-		echo "Not starting KMDICE - already started"
-		sleep 4
-	fi
-}
-
-#y24y
+#y23y
 function start_hush3 {
 	source /root/.devwallet
 	echo "Starting HUSH3..."
 	sleep 2
 	if ! ps aux | grep -i "[h]ush" ; then
-#	KMDICE=`ps aux | grep -i kmdice | grep -v grep`
-#	if [ -z "$KMDICE" ]; then
 		echo "Starting hush3... "
 		if [ "$DEVPUBKEY" == "" ]; then
 			echo "Starting HUSH3 with no pubkey set"
@@ -294,7 +270,7 @@ function start_hush3 {
 	fi
 }
 
-#y25y
+#y23y
 function start_pirate {
 	CHAIN="PIRATE"
 	source /root/.devwallet
@@ -318,26 +294,71 @@ function start_pirate {
 	fi
 }
 
-#y24y
-function start_kmdice {
+#y23y
+function start_beer {
+	CHAIN="BEER"
 	source /root/.devwallet
-	echo "Starting KMDICE..."
+	echo "Starting $CHAIN..."
+	sleep 2
+	if ! ps aux | grep -i "[b]eer" ; then
+		echo "Starting $CHAIN... "
+		if [ "$DEVPUBKEY" == "" ]; then
+			echo "Starting $CHAIN with no pubkey set"
+			hide_output komodod -ac_name=BEER -ac_supply=100000000 -addnode=78.47.196.146 &
+			sleep 3
+		else
+			echo "Starting $CHAIN with pubkey $DEVPUBKEY"
+			hide_output komodod -pubkey=$DEVPUBKEY -ac_name=BEER -ac_supply=100000000 -addnode=78.47.196.146 &
+			sleep 3
+		fi
+	else
+		echo "Not starting $CHAIN - already started"
+		sleep 4
+	fi
+}
+
+#y23y
+function start_pizza {
+	CHAIN="PIZZA"
+	source /root/.devwallet
+	echo "Starting $CHAIN..."
+	sleep 2
+	if ! ps aux | grep -i "[p]izza" ; then
+		echo "Starting $CHAIN... "
+		if [ "$DEVPUBKEY" == "" ]; then
+			echo "Starting $CHAIN with no pubkey set"
+			hide_output komodod -ac_name=PIZZA -ac_supply=100000000 -addnode=78.47.196.146 &
+			sleep 3
+		else
+			echo "Starting $CHAIN with pubkey $DEVPUBKEY"
+			hide_output komodod -pubkey=$DEVPUBKEY -ac_name=PIZZA -ac_supply=100000000 -addnode=78.47.196.146 &
+			sleep 3
+		fi
+	else
+		echo "Not starting $CHAIN - already started"
+		sleep 4
+	fi
+}
+
+#y23y
+function start_kmdice {
+	CHAIN="KMDICE"
+	source /root/.devwallet
+	echo "Starting $CHAIN..."
 	sleep 2
 	if ! ps aux | grep -i "[k]mdice" ; then
-#	KMDICE=`ps aux | grep -i kmdice | grep -v grep`
-#	if [ -z "$KMDICE" ]; then
-		echo "Starting kmdice ... "
+		echo "Starting $CHAIN... "
 		if [ "$DEVPUBKEY" == "" ]; then
-			echo "Starting KMDICE with no pubkey set"
+			echo "Starting $CHAIN with no pubkey set"
 			hide_output komodod -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
 			sleep 3
 		else
-			echo "Starting KMDICE with pubkey $DEVPUBKEY"
+			echo "Starting $CHAIN with pubkey $DEVPUBKEY"
 			hide_output komodod -pubkey=$DEVPUBKEY -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
 			sleep 3
 		fi
 	else
-		echo "Not starting KMDICE - already started"
+		echo "Not starting $CHAIN - already started"
 		sleep 4
 	fi
 }
@@ -346,6 +367,34 @@ function start_kmdice {
 function stop_pirate {
 	CHAIN="PIRATE"
   if ps aux | grep -i [p]irate ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    RESULT=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+    echo "Result: $RESULT"
+    sleep 2
+  else
+    echo "Nothing to stop..."
+    sleep 1
+  fi
+}
+
+#y14y#
+function stop_beer {
+	CHAIN="BEER"
+  if ps aux | grep -i [b]eer ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    RESULT=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+    echo "Result: $RESULT"
+    sleep 2
+  else
+    echo "Nothing to stop..."
+    sleep 1
+  fi
+}
+
+#y14y#
+function stop_pizza {
+	CHAIN="PIZZA"
+  if ps aux | grep -i [p]izza ; then
     source ~/.komodo/$CHAIN/$CHAIN.conf
     RESULT=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
     echo "Result: $RESULT"
@@ -504,6 +553,36 @@ function getpeerinfo_pirate {
 }
 
 #y15y
+function getpeerinfo_beer {
+  CHAIN="BEER"
+  METHOD="getpeerinfo"
+  if ps aux | grep -i [b]eer ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y15y
+function getpeerinfo_pizza {
+  CHAIN="PIZZA"
+  METHOD="getpeerinfo"
+  if ps aux | grep -i [p]izza ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y15y
 function getpeerinfo_kmdice {
   CHAIN="KMDICE"
   METHOD="getpeerinfo"
@@ -553,6 +632,36 @@ function getmininginfo_kmdice {
   CHAIN="KMDICE"
   METHOD="getmininginfo"
   if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y15y
+function getinfo_beer {
+  CHAIN="BEER"
+  METHOD="getinfo"
+  if ps aux | grep -i [b]eer ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y15y
+function getinfo_pizza {
+  CHAIN="PIZZA"
+  METHOD="getinfo"
+  if ps aux | grep -i [p]izza ; then
     source ~/.komodo/$CHAIN/$CHAIN.conf
     curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
     MSGBOXINFO=`cat /root/.$METHOD`

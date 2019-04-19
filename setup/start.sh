@@ -118,7 +118,7 @@ else
   source setup/nanomsg.sh
   source setup/komodo.sh
   setup_devwallet
-  source/console.sh
+  source setup/console.sh
 fi
 # Wait for the management daemon to start...
 until nc -z -w 4 127.0.0.1 10222
