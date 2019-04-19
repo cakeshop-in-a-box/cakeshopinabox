@@ -100,14 +100,13 @@ PRIVATE_IP=$PRIVATE_IP
 PRIVATE_IPV6=$PRIVATE_IPV6
 EOF
 
-if [ ! -z "${PROVIDE_ADMIN}" ];then
+if [ ! -z "${PROVIDE_ADMIN:-}" ];then
   echo "Providing console"
   sleep 1
   source setup/console.sh
 else
   echo "First install"
   sleep 2
-  setup_devwallet
   # Start service configuration.
   init_pubkey
   source setup/pubkey.sh
@@ -118,6 +117,7 @@ else
   #source setup/munin.sh
   source setup/nanomsg.sh
   source setup/komodo.sh
+  setup_devwallet
 fi
 # Wait for the management daemon to start...
 until nc -z -w 4 127.0.0.1 10222
