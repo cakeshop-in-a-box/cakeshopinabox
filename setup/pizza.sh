@@ -8,7 +8,7 @@ dialog --clear  --help-button --backtitle "Cakeshop Console" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
+Choose the TASK" 25 60 14 \
 PIZZA_GETINFO "Get Info - PIZZA getinfo method" \
 PIZZA_LISTUNSPENT "List Unspent UTXO - PIZZA listunspent" \
 PIZZA_GETPEERINFO "Get Network Info - PIZZA getpeerinfo" \
@@ -16,7 +16,7 @@ PIZZA_GETMININGINFO "Get Mining Info - PIZZA getmininginfo" \
 PIZZA_DELETE "Experimental - Delete blockchain data" \
 PIZZA_START "Start PIZZA" \
 PIZZA_STOP "Stop PIZZA" \
-Exit "Exit to the shell" 2>"${INPUT}"
+Back "Back a menu" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
 
@@ -31,7 +31,7 @@ case $menuitem in
 	PIZZA_LISTUNSPENT) listunspent_pizza;;
 	PIZZA_GETPEERINFO) getpeerinfo_pizza;;
 	PIZZA_GETMININGINFO) getmininginfo_pizza;;
-	Exit) echo "Bye"; break;;
+	Back) echo "Bye"; break;;
 esac
 done
 }

@@ -69,7 +69,7 @@ dialog --clear  --help-button --backtitle "Start blockchain" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
+Choose the TASK" 25 60 14 \
 HUSH3 "Sync & Start HUSH3" \
 Exit "Exit to the shell" 2>"${INPUT}"
 
@@ -95,7 +95,7 @@ dialog --clear  --help-button --backtitle "Cakeshop Console" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
+Choose the TASK" 25 60 14 \
 HUSH3_GETINFO "Get Info - HUSH3 getinfo method" \
 HUSH3_LISTUNSPENT "List Unspent UTXO - HUSH3 listunspent" \
 HUSH3_GETPEERINFO "Get Network Info - HUSH3 getpeerinfo" \
@@ -103,7 +103,7 @@ HUSH3_GETMININGINFO "Get Mining Info - HUSH3 getmininginfo" \
 HUSH3_DELETE "Experimental - Delete blockchain data" \
 HUSH3_START "Start HUSH3" \
 HUSH3_STOP "Stop HUSH3" \
-Exit "Exit to the shell" 2>"${INPUT}"
+Back "Back a menu" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
 
@@ -118,7 +118,7 @@ case $menuitem in
 	HUSH3_LISTUNSPENT) listunspent_hush3;;
 	HUSH3_GETPEERINFO) getpeerinfo_hush3;;
 	HUSH3_GETMININGINFO) getmininginfo_hush3;;
-	Exit) echo "Bye"; break;;
+	Back) echo "Bye"; break;;
 esac
 done
 }

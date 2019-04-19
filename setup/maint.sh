@@ -1,4 +1,4 @@
-source setup/hush.sh
+source setup/hush3.sh
 
 function submenu_maint {
 while true
@@ -10,7 +10,7 @@ dialog --clear  --help-button --backtitle "Komodo Console" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
+Choose the TASK" 25 60 14 \
 MAINT_HUSH "Get Info - KMDICE getinfo method" \
 MAINT_CHIPS "List Unspent UTXO - KMDICE listunspent" \
 MAINT_VERUS "Get Network Info - KMDICE getpeerinfo" \

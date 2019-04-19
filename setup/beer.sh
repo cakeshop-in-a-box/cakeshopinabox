@@ -8,7 +8,7 @@ dialog --clear  --help-button --backtitle "Cakeshop Console" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
+Choose the TASK" 25 60 14 \
 BEER_GETINFO "Get Info - BEER getinfo method" \
 BEER_LISTUNSPENT "List Unspent UTXO - BEER listunspent" \
 BEER_GETPEERINFO "Get Network Info - BEER getpeerinfo" \
@@ -16,7 +16,7 @@ BEER_GETMININGINFO "Get Mining Info - BEER getmininginfo" \
 BEER_DELETE "Experimental - Delete blockchain data" \
 BEER_START "Start BEER" \
 BEER_STOP "Stop BEER" \
-Exit "Exit to the shell" 2>"${INPUT}"
+Back "Back a menu" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
 
@@ -31,7 +31,7 @@ case $menuitem in
 	BEER_LISTUNSPENT) listunspent_beer;;
 	BEER_GETPEERINFO) getpeerinfo_beer;;
 	BEER_GETMININGINFO) getmininginfo_beer;;
-	Exit) echo "Bye"; break;;
+	Back) echo "Bye"; break;;
 esac
 done
 }

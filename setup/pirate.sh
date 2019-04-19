@@ -8,7 +8,7 @@ dialog --clear  --help-button --backtitle "Cakeshop Console" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
+Choose the TASK" 25 60 14 \
 PIRATE_GETINFO "Get Info - PIRATE getinfo method" \
 PIRATE_LISTUNSPENT "List Unspent UTXO - PIRATE listunspent" \
 PIRATE_GETPEERINFO "Get Network Info - PIRATE getpeerinfo" \
@@ -16,7 +16,7 @@ PIRATE_GETMININGINFO "Get Mining Info - PIRATE getmininginfo" \
 PIRATE_DELETE "Experimental - Delete blockchain data" \
 PIRATE_START "Start PIRATE" \
 PIRATE_STOP "Stop PIRATE" \
-Exit "Exit to the shell" 2>"${INPUT}"
+Back "Back a menu" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
 

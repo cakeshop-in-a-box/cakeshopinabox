@@ -8,7 +8,7 @@ dialog --clear  --help-button --backtitle "Komodo Console" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
+Choose the TASK" 25 60 14 \
 REGTEST_START "Give me devmode - start single user dev chain" \
 REGTEST_STOP "Stop devmode - stops single user dev chain" \
 REGTEST_GETINFO "Get Info - single user dev chain getinfo method" \
