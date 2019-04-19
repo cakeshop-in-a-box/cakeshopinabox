@@ -129,7 +129,7 @@ apt_install python3 python3-dev python3-pip \
 	g++-multilib autoconf libtool ncurses-dev unzip \
 	python zlib1g-dev wget bsdmainutils automake \
 	libssl-dev libprotobuf-dev protobuf-compiler \
-	libqrencode-dev ntp ntpdate \
+	libqrencode-dev ntp ntpdate jq \
 	software-properties-common curl \
 	libcurl4-openssl-dev cmake clang libevent-dev \
 	libboost-all-dev build-essential pkg-config \
