@@ -53,26 +53,3 @@ sleep 2
 echo "Get ready to select chains to sync!!"
 sleep 3
 
-while true
-do
-
-### display main menu ###
-dialog --clear  --help-button --backtitle "Start blockchain" \
---title "[ S Y N C - C H A I N ]" \
---menu "You can use the UP/DOWN arrow keys, the first \n\
-letter of the choice as a hot key, or the \n\
-number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
-KMDICE "Sync & Start KMDICE" \
-Exit "Exit to the shell" 2>"${INPUT}"
-
-menuitem=$(<"${INPUT}")
-
-
-# make decsion
-case $menuitem in
-	KMD) start_komodo;;
-	KMDICE) start_kmdice;;
-	Exit) echo "Bye"; break;;
-esac
-done

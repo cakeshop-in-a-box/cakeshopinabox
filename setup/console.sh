@@ -1,4 +1,7 @@
 cd $INSTALL_DIR
+if [ ! -f /root/.devwallet ]; then
+  setup_devwallet
+fi
 source setup/kmdice.sh
 source setup/regtest.sh
 source setup/maint.sh
