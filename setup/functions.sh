@@ -294,6 +294,30 @@ function start_hush3 {
 	fi
 }
 
+#y25y
+function start_pirate {
+	CHAIN="PIRATE"
+	source /root/.devwallet
+	echo "Starting $CHAIN..."
+	sleep 2
+	if ! ps aux | grep -i "[p]irate" ; then
+		echo "Starting pirate... "
+		if [ "$DEVPUBKEY" == "" ]; then
+			echo "Starting $CHAIN with no pubkey set"
+			hide_output komodod -ac_name=PIRATE -ac_supply=0 -ac_reward=25600000000 -ac_halving=77777 -ac_private=1 -addnode=178.63.77.56 &
+
+			sleep 3
+		else
+			echo "Starting $CHAIN with pubkey $DEVPUBKEY"
+			hide_output komodod -pubkey=$DEVPUBKEY -ac_name=PIRATE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
+			sleep 3
+		fi
+	else
+		echo "Not starting $CHAIN - already started"
+		sleep 4
+	fi
+}
+
 #y24y
 function start_kmdice {
 	source /root/.devwallet
@@ -318,6 +342,21 @@ function start_kmdice {
 	fi
 }
 
+#y14y#
+function stop_pirate {
+	CHAIN="PIRATE"
+  if ps aux | grep -i [p]irate ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    RESULT=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+    echo "Result: $RESULT"
+    sleep 2
+  else
+    echo "Nothing to stop..."
+    sleep 1
+  fi
+}
+
+#y14y#
 function stop_kmdice {
 	CHAIN="KMDICE"
   if ps aux | grep -i [k]mdice ; then
@@ -449,7 +488,22 @@ function getpeerinfo_hush3 {
   fi
 }
 
-#y14y
+#y15y
+function getpeerinfo_pirate {
+  CHAIN="PIRATE"
+  METHOD="getpeerinfo"
+  if ps aux | grep -i [p]irate ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y15y
 function getpeerinfo_kmdice {
   CHAIN="KMDICE"
   METHOD="getpeerinfo"
@@ -464,7 +518,7 @@ function getpeerinfo_kmdice {
   fi
 }
 
-#y14y
+#y15y
 function getmininginfo_hush3 {
   CHAIN="HUSH3"
   METHOD="getmininginfo"
@@ -479,7 +533,22 @@ function getmininginfo_hush3 {
   fi
 }
 
-#y14y
+#y15y
+function getmininginfo_pirate {
+  CHAIN="PIRATE"
+  METHOD="getmininginfo"
+  if ps aux | grep -i [p]irate ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y15y
 function getmininginfo_kmdice {
   CHAIN="KMDICE"
   METHOD="getmininginfo"
@@ -494,11 +563,26 @@ function getmininginfo_kmdice {
   fi
 }
 
-#y14y
+#y15y
 function getinfo_kmdice {
   CHAIN="KMDICE"
   METHOD="getinfo"
   if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y14y
+function getinfo_pirate {
+  CHAIN="PIRATE"
+  METHOD="getinfo"
+  if ps aux | grep -i [p]irate ; then
     source ~/.komodo/$CHAIN/$CHAIN.conf
     curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
     MSGBOXINFO=`cat /root/.$METHOD`
