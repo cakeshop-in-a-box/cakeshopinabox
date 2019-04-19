@@ -5,7 +5,7 @@ while true
 do
 
 ### display main menu ###
-dialog --clear  --help-button --backtitle "Komodo Console" \
+dialog --clear  --help-button --backtitle "Cakeshop Console" \
 --title "[ M A I N T - C O N S O L E ]" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
