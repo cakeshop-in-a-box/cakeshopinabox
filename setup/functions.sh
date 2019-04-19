@@ -270,6 +270,31 @@ function start_komodo {
 	fi
 }
 
+#y24y
+function start_hush3 {
+	source /root/.devwallet
+	echo "Starting HUSH3..."
+	sleep 2
+	if ! ps aux | grep -i "[h]ush" ; then
+#	KMDICE=`ps aux | grep -i kmdice | grep -v grep`
+#	if [ -z "$KMDICE" ]; then
+		echo "Starting hush3... "
+		if [ "$DEVPUBKEY" == "" ]; then
+			echo "Starting HUSH3 with no pubkey set"
+			hide_output hushd & 
+			sleep 3
+		else
+			echo "Starting HUSH3 with pubkey $DEVPUBKEY"
+			hide_output hushd -pubkey=$DEVPUBKEY &
+			sleep 3
+		fi
+	else
+		echo "Not starting HUSH3 - already started"
+		sleep 4
+	fi
+}
+
+#y24y
 function start_kmdice {
 	source /root/.devwallet
 	echo "Starting KMDICE..."
@@ -409,10 +434,40 @@ function start_regtest {
 }
 
 #y14y
+function getpeerinfo_hush3 {
+  CHAIN="HUSH3"
+  METHOD="getpeerinfo"
+  if ps aux | grep -i [h]ush3 ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y14y
 function getpeerinfo_kmdice {
   CHAIN="KMDICE"
   METHOD="getpeerinfo"
   if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y14y
+function getmininginfo_hush3 {
+  CHAIN="HUSH3"
+  METHOD="getmininginfo"
+  if ps aux | grep -i [h]ush3 ; then
     source ~/.komodo/$CHAIN/$CHAIN.conf
     curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
     MSGBOXINFO=`cat /root/.$METHOD`
@@ -443,6 +498,23 @@ function getinfo_kmdice {
   CHAIN="KMDICE"
   METHOD="getinfo"
   if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y14y
+function getinfo_hush3 {
+  CHAIN="HUSH3"
+  METHOD="getinfo"
+  if ps aux | grep -i [h]ush3 ; then
+    echo "HUSH3 is running..."
+    sleep 2
     source ~/.komodo/$CHAIN/$CHAIN.conf
     curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
     MSGBOXINFO=`cat /root/.$METHOD`
