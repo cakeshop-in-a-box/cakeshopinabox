@@ -17,7 +17,7 @@ if [ -z "${NONINTERACTIVE:-}" ]; then
 	# so we install the python package globally.
 #	hide_output pip3 install "email_validator>=1.0.0" || exit 1
 #
-	message_box "Cakeshop-in-a-Box Installation" \
+	message_box "Cakeshop-in-a-Box" \
 		"Hello and thanks for deploying a Cakeshop-in-a-Box!
 		\n\nI'm going to ask you a few questions.
 		\nTo change your answers later, just run 'sudo cakeshopinabox' from the command line.
@@ -28,7 +28,7 @@ if [ -z "${NONINTERACTIVE:-}" ]; then
 fi
 
 # The box needs a name.
-if [ -z "${PRIMARY_HOSTNAME:-}" ]; then
+if [ -z "${DEFAULT_PRIMARY_HOSTNAME:-}" ]; then
 #	if [ -z "${DEFAULT_PRIMARY_HOSTNAME:-}" ]; then
 		# We recommend to use cakeshop.example.com as this hosts name. The
 		# domain the user possibly wants to use is example.com then.
@@ -84,12 +84,14 @@ address, so we're suggesting $DEFAULT_PRIMARY_HOSTNAME.
 		# user hit ESC/cancel
 		exit
 	fi
+else
+	PRIMARY_HOSTNAME=$DEFAULT_PRIMARY_HOSTNAME
 fi
 
 # If the machine is behind a NAT, inside a VM, etc., it may not know
 # its IP address on the public network / the Internet. Ask the Internet
 # and possibly confirm with user.
-if [ -z "${PUBLIC_IP:-}" ]; then
+if [ -z "${DEFAULT_PUBLIC_IP:-}" ]; then
 	# Ask the Internet.
 	GUESSED_IP=$(get_publicip_from_web_service 4)
 
@@ -120,6 +122,8 @@ if [ -z "${PUBLIC_IP:-}" ]; then
 			exit
 		fi
 	fi
+else
+	PUBLIC_IP=$DEFAULT_PUBLIC_IP
 fi
 
 # Same for IPv6. But it's optional. Also, if it looks like the system

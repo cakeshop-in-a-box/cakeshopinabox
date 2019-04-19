@@ -271,23 +271,208 @@ function start_komodo {
 }
 
 function start_kmdice {
+	source /root/.devwallet
 	echo "Starting KMDICE..."
 	sleep 2
 	if ! ps aux | grep -i "[k]mdice" ; then
 #	KMDICE=`ps aux | grep -i kmdice | grep -v grep`
 #	if [ -z "$KMDICE" ]; then
 		echo "Starting kmdice ... "
-		if [ "$pubkey" == "" ]; then
+		if [ "$DEVPUBKEY" == "" ]; then
 			echo "Starting KMDICE with no pubkey set"
 			hide_output komodod -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
 			sleep 3
 		else
-			echo "Starting KMDICE with pubkey $pubkey"
-			hide_output komodod -pubkey=$pubkey -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
+			echo "Starting KMDICE with pubkey $DEVPUBKEY"
+			hide_output komodod -pubkey=$DEVPUBKEY -ac_name=KMDICE -ac_supply=10500000 -ac_reward=2500000000 -ac_halving=210000 -ac_cc=2 -addressindex=1 -spentindex=1 -addnode=144.76.217.232 &
 			sleep 3
 		fi
 	else
 		echo "Not starting KMDICE - already started"
 		sleep 4
 	fi
+}
+
+function stop_kmdice {
+	CHAIN="KMDICE"
+  if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    RESULT=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+    echo "Result: $RESULT"
+    sleep 2
+  else
+    echo "Nothing to stop..."
+    sleep 1
+  fi
+}
+
+function listunspent_regtest {
+  if ps aux | grep -i [r]egtest ; then
+    NAME=$(ps aux | grep [r]egtest | cut -d= -f2| cut -d' ' -f1)
+    source ~/.komodo/$NAME/$NAME.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"listunspent\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.listunspent
+    LISTUNSPENT=`cat /root/.listunspent`
+    message_box "UTXOs" "$LISTUNSPENT"
+  else
+    echo "Nothing to query - start devmode..."
+    sleep 1
+  fi
+}
+
+function generate_regtest {
+  if ps aux | grep -i [r]egtest ; then
+    NAME=$(ps aux | grep [r]egtest | cut -d= -f2| cut -d' ' -f1)
+    source ~/.komodo/$NAME/$NAME.conf
+    input_box "Generate blocks" "How many blocks to generate?" "1" GENERATE
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"generate\", \"params\": [$GENERATE]}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.generate
+    GENERATE=`cat /root/.generate`
+    message_box "Blockhash(es)" "$GENERATE"
+  else
+    echo "Nothing to query - start devmode..."
+    sleep 1
+  fi
+}
+
+function getinfo_regtest {
+  if ps aux | grep -i [r]egtest ; then
+    NAME=$(ps aux | grep [r]egtest | cut -d= -f2| cut -d' ' -f1)
+    source ~/.komodo/$NAME/$NAME.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getinfo", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.getinfo
+    GETINFO=`cat /root/.getinfo`
+    message_box "getinfo" "$GETINFO"
+  else
+    echo "Nothing to query - start devmode..."
+    sleep 1
+  fi
+}
+
+function setup_devwallet {
+  echo "Starting DEV wallet setup"
+  hide_output komodod -regtest -ac_name=CAKESHOPDEVSETUP -ac_supply=500 &
+  sleep 7
+  source ~/.komodo/CAKESHOPDEVSETUP/CAKESHOPDEVSETUP.conf
+  DEVADDRESS=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getnewaddress", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+  DEVWIF=`curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"dumpprivkey\", \"params\": [\"$DEVADDRESS\"]}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+  DEVPUBKEY=`curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"validateaddress\", \"params\": [\"$DEVADDRESS\"]}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result.pubkey'`
+  #echo "{\"devaddress\": \"$DEVADDRESS\",\"devwif\": \"$DEVWIF\", \"devpubkey\": \"$DEVPUBKEY\"}" > /root/.devwallet
+  echo "DEVADDRESS=$DEVADDRESS" > /root/.devwallet
+  echo "DEVWIF=$DEVWIF" >> /root/.devwallet
+  echo "DEVPUBKEY=$DEVPUBKEY" >> /root/.devwallet
+  cat /root/.devwallet
+  echo "Completed DEV wallet setup"
+  sleep 1
+  hide_output curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'
+  sleep 1
+}
+
+function stop_regtest {
+  if ps aux | grep -i [r]egtest ; then
+    NAME=$(ps aux | grep [r]egtest | cut -d= -f2| cut -d' ' -f1)
+    source ~/.komodo/$NAME/$NAME.conf
+    RESULT=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "stop", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+    echo "Result: $RESULT"
+    sleep 2
+  else
+    echo "Nothing to stop..."
+    sleep 1
+  fi
+}
+
+function start_regtest {
+  if ps aux | grep -i [r]egtest ; then
+    NAME=$(ps aux | grep [r]egtest | cut -d= -f2| cut -d' ' -f1)
+    source ~/.komodo/$NAME/$NAME.conf
+    WALLET1=`curl -s --user $rpcuser:$rpcpassword --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getnewaddress", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'`
+    echo "New wallet address: $WALLET1"
+    input_box "LEG4" "New wallet is" "$WALLET1" WALLET1B
+    sleep 3
+  else
+    input_box "LEGS1" "How many coins?" "1000" SUPPLY
+    #input_box "LEGS2" "How many wallets?" "5" WALLETS
+    input_box "LEGS3" "Ticker for chain?" "MYCOIN" NAME
+    source ~/.devwallet
+    echo $SUPPLY
+    sleep 1
+#    echo $WALLETS
+#    sleep 1
+    echo $NAME
+    sleep 1
+    hide_output komodod -regtest -ac_name=$NAME -ac_supply=$SUPPLY -pubkey=$DEVPUBKEY &
+    sleep 1
+    sleep 1
+    source ~/.komodo/$NAME/$NAME.conf
+    echo "Using $rpcuser & $rpcpassword with wif $DEVWIF"
+    sleep 2
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"importprivkey\", \"params\": [\"$DEVWIF\"]}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result'
+    sleep 3
+  fi
+}
+
+#y14y
+function getpeerinfo_kmdice {
+  CHAIN="KMDICE"
+  METHOD="getpeerinfo"
+  if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y14y
+function getmininginfo_kmdice {
+  CHAIN="KMDICE"
+  METHOD="getmininginfo"
+  if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+#y14y
+function getinfo_kmdice {
+  CHAIN="KMDICE"
+  METHOD="getinfo"
+  if ps aux | grep -i [k]mdice ; then
+    source ~/.komodo/$CHAIN/$CHAIN.conf
+    curl -s --user $rpcuser:$rpcpassword --data-binary "{\"jsonrpc\": \"1.0\", \"id\": \"curltest\", \"method\": \"$METHOD\", \"params\": []}" -H 'content-type: text/plain;' http://127.0.0.1:$rpcport/ | jq -r '.result' > /root/.$METHOD
+    MSGBOXINFO=`cat /root/.$METHOD`
+    message_box "$METHOD" "$MSGBOXINFO"
+  else
+    echo "Nothing to query - start $CHAIN..."
+    sleep 1
+  fi
+}
+
+function delete_blockchain_data_kmdice {
+  CHAIN="KMDICE"
+  if ! ps aux | grep -i [k]mdice ; then
+    echo "Deleting blockchain data for $CHAIN"
+    sleep 2
+    cd ~/.komodo/$CHAIN
+    echo "in $CHAIN directory"
+    sleep 2
+#    CONTENTS=$(ls | grep -v "$CHAIN.conf\|wallet.dat") 
+#    message_box "Info" "Deleting $CONTENTS"
+    ls | grep -v "$CHAIN.conf\|wallet.dat" | xargs rm -Rf
+    echo "Done deleting..."
+    sleep 2
+#    CONTENTS=$(ls) 
+#    message_box "Info" "Contents \n $CONTENTS"
+    cd $INSTALL_DIR
+    echo "Done deleting blockchain data for $CHAIN...."
+    sleep 2
+  else
+    echo "$CHAIN is running.  Stop $CHAIN before doing this..."
+    sleep 2
+  fi
 }

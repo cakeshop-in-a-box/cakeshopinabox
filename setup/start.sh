@@ -42,6 +42,7 @@ if [ -f /etc/cakeshopinabox.conf ]; then
 	cat /etc/cakeshopinabox.conf | sed s/^/DEFAULT_/ > /tmp/cakeshopinabox.prev.conf
 	source /tmp/cakeshopinabox.prev.conf
 	rm -f /tmp/cakeshopinabox.prev.conf
+	PROVIDE_ADMIN=1
 else
 	FIRST_TIME_SETUP=1
 fi
@@ -99,26 +100,25 @@ PRIVATE_IP=$PRIVATE_IP
 PRIVATE_IPV6=$PRIVATE_IPV6
 EOF
 
-# Start service configuration.
-init_pubkey
-source setup/pubkey.sh
-source setup/system.sh
-#source setup/ssl.sh
-#source setup/dns.sh
-#source setup/mail-postfix.sh
-#source setup/mail-dovecot.sh
-#source setup/mail-users.sh
-#source setup/dkim.sh
-#source setup/spamassassin.sh
-#source setup/web.sh
-#source setup/webmail.sh
-#source setup/nextcloud.sh
-#source setup/zpush.sh
-#source setup/management.sh
-#source setup/munin.sh
-source setup/nanomsg.sh
-source setup/komodo.sh
-
+if [ ! -z "${PROVIDE_ADMIN}" ];then
+  echo "Providing console"
+  sleep 1
+  source setup/console.sh
+else
+  echo "First install"
+  sleep 2
+  setup_devwallet
+  # Start service configuration.
+  init_pubkey
+  source setup/pubkey.sh
+  source setup/system.sh
+  #source setup/ssl.sh
+  #source setup/web.sh
+  #source setup/management.sh
+  #source setup/munin.sh
+  source setup/nanomsg.sh
+  source setup/komodo.sh
+fi
 # Wait for the management daemon to start...
 until nc -z -w 4 127.0.0.1 10222
 do
@@ -127,11 +127,6 @@ do
 	echo Not required
 	break
 done
-
-# ...and then have it write the DNS and nginx configuration files and start those
-# services.
-#tools/dns_update
-#tools/web_update
 
 # Give fail2ban another restart. The log files may not all have been present when
 # fail2ban was first configured, but they should exist now.
@@ -159,28 +154,6 @@ restart_service fail2ban
 echo
 echo "-----------------------------------------------"
 echo
-echo Your komodo-in-a-box is running with these blockchain parameters 1 per line
+echo Your komodo-in-a-box is running with these blockchains (1 per line)
 echo
 ps aux | grep komodod | grep -v grep | awk -F " " '{$1=$2=$3=$4=$5=$6=$7=$8=$9=$10=""; print $0 }'
-#echo Please log in to the control panel for further instructions at:
-#echo
-#if management/status_checks.py --check-primary-hostname; then
-#	# Show the nice URL if it appears to be resolving and has a valid certificate.
-#	echo https://$PRIMARY_HOSTNAME/admin
-#	echo
-#	echo "If you have a DNS problem put the box's IP address in the URL"
-#	echo "(https://$PUBLIC_IP/admin) but then check the TLS fingerprint:"
-#	openssl x509 -in $STORAGE_ROOT/ssl/ssl_certificate.pem -noout -fingerprint -sha256\
-#        	| sed "s/SHA256 Fingerprint=//"
-#else
-#	echo https://$PUBLIC_IP/admin
-#	echo
-#	echo You will be alerted that the website has an invalid certificate. Check that
-#	echo the certificate fingerprint matches:
-#	echo
-#	openssl x509 -in $STORAGE_ROOT/ssl/ssl_certificate.pem -noout -fingerprint -sha256\
-#        	| sed "s/SHA256 Fingerprint=//"
-#	echo
-#	echo Then you can confirm the security exception and continue.
-#	echo
-#fi
