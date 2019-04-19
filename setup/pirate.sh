@@ -31,7 +31,7 @@ case $menuitem in
 	PIRATE_LISTUNSPENT) listunspent_pirate;;
 	PIRATE_GETPEERINFO) getpeerinfo_pirate;;
 	PIRATE_GETMININGINFO) getmininginfo_pirate;;
-	Exit) echo "Bye"; break;;
+	Back) echo "Bye"; break;;
 esac
 done
 }
