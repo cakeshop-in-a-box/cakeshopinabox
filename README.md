@@ -1,3 +1,23 @@
+# Requirements
+* Ubuntu 64 bit 18.04 AMD/Intel
+* 4GB RAM
+* 20+GB HDD (depending on number of blockchain projects)
+
+# Install
+Run as root
+```
+ssh root@host
+curl https://cakeshop.dev/setup.sh | sudo bash
+```
+# Software
+* Fail2ban
+* Komodo
+* Hush
+* Verus (in dev)
+* CHIPS (in dev)
+* More to come including marketmaker-in-a-box, iguana-in-a-box and other blockchains (BTC/LTC/ZEC/DGB/etc.)
+
+
 Komodo-in-a-Box
 =============
 
