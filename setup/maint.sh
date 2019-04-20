@@ -1,4 +1,5 @@
 source setup/hush3.sh
+source setup/bsk1n.sh
 source setup/bsk.sh
 
 function submenu_maint {
@@ -15,7 +16,8 @@ Choose the TASK" 25 60 14 \
 HUSH3 "Get Info - KMDICE getinfo method" \
 CHIPS "List Unspent UTXO - KMDICE listunspent" \
 VERUS "Get Network Info - KMDICE getpeerinfo" \
-CREATE "Create a new blockchain" \
+BSK1N "Blockchain Starer Kit - single node seed & mining" \
+BSK "Blockchain Starter Kit - seed node or mining node" \
 Back "Back a menu" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
@@ -26,7 +28,8 @@ case $menuitem in
 	HUSH3) install_hush3;;
 	CHIPS) install_chips;;
 	VERUS) install_verus;;
-	CREATE) bsk;;
+	BSK1N) bsk1n;;
+	BSK) bsk;;
 	Back) echo "Bye"; break;;
 esac
 done
