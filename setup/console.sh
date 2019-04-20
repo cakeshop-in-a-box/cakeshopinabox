@@ -16,7 +16,7 @@ dialog --clear  --help-button --backtitle "Cakeshop Console" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
-Choose the TASK" 25 60 14 \
+Choose the TASK" 25 120 14 \
 KMDICE "KMDICE - the mineable provably fair chain" \
 PIRATE "PIRATE - ARRR an enforced privary chain" \
 HUSH3 "HUSH3 - first sapling only blockchain" \
