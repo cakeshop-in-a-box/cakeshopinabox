@@ -14,7 +14,7 @@ letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 25 120 14 \
 HUSH3 "Install/Update HUSH3" \
-HUSH3TMP "Start/Sync HUSH3" \
+HUSH3CONSOLE "Start/Sync & control HUSH3" \
 CHIPS "(development Q2 2019)" \
 VERUS "(development Q2 2019)" \
 BSK_1_HOST "Blockchain Starer Kit - single node seed & mining" \
@@ -28,7 +28,7 @@ menuitem=$(<"${INPUT}")
 # make decsion
 case $menuitem in
 	HUSH3) install_hush3;;
-	HUSH3TMP) submenu_hush3;;
+	HUSH3CONSOLE) submenu_hush3;;
 	CHIPS) install_chips;;
 	VERUS) install_verus;;
 	BSK_1_HOST) bsk1n;;
