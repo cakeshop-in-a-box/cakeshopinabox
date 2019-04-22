@@ -7,7 +7,7 @@ if [ "$1" == "help" ]; then
 	echo "  cakeshopinabox"
 	echo ""
 	echo "Command arguments are:"
-	echo "  cakeshopinabox nobsk - skips blockchain starter kit & komodo install"
+	# echo "  cakeshopinabox nobsk - skips blockchain starter kit & komodo install" # TODO
 	echo "  cakeshopinabox reconfigure - asks the installation questions again"
 	echo "  cakeshopinabox update - pulls latest console updates but leaves blockchain src alone"
 	echo "  cakeshop debug - runs in more verbose mode without hiding output from commands"
@@ -27,6 +27,7 @@ INSTALL_DIR=`pwd`
 NOSYSCHECK=0
 DEBUG=0
 RECONFIGURE=0
+NOBSK=0 
 
 source setup/functions.sh # load our functions
 
@@ -35,22 +36,27 @@ do
   if [ "$cakeshoparg" == "nosyscheck" ]; then
 	echo "No syscheck option enabled"
 	NOSYSCHECK=1
+	sleep 1
   fi
 
   if [ "$cakeshoparg" == "debug" ]; then
 	echo "Debug enabled, showing full outputs & saving to log"
 	DEBUG=1
+	sleep 1
   fi
 
   if [ "$cakeshoparg" == "reconfigure" ]; then
 	echo "Reconfiguring cakeshopinabox"
 	RECONFIGURE=1
+	sleep 1
   fi
 
-  if [ "$cakeshoparg" == "nobsk" ]; then
-	echo "Skipping blockchain starter kit (bsk) on install"
-	RECONFIGURE=1
-  fi
+# TODO
+#  if [ "$cakeshoparg" == "nobsk" ]; then
+#	echo "Skipping blockchain starter kit (bsk) on install"
+#	NOBSK=1
+#	sleep 1
+#  fi
 
   if [ "$cakeshoparg" == "help" ]; then
 	echo "Detected help, abandoning"
@@ -66,9 +72,8 @@ if [ $RECONFIGURE -eq 1 ]; then
 		echo "Reconfiguring.  This is equivalent to rm /etc/cakeshopinabox.conf"
 		echo "setup/questions.sh"
 		sleep 1
-		exit
 	fi
-	rm /etc/cakeshopinabox.conf
+	rm /etc/cakeshopinabox.conf || true
 	source setup/questions.sh
 fi
 
@@ -220,6 +225,7 @@ PUBLIC_IP=$PUBLIC_IP
 PUBLIC_IPV6=$PUBLIC_IPV6
 PRIVATE_IP=$PRIVATE_IP
 PRIVATE_IPV6=$PRIVATE_IPV6
+NOBSK=$NOBSK
 EOF
 
 if [ ! -z "${PROVIDE_ADMIN:-}" ];then
@@ -256,17 +262,21 @@ else
     sleep 1
   fi
   source setup/nanomsg.sh
-  if [ $NOBSK -eq 1 ]; then
-    echo "No BSK option detected, no komodo default install"
-    sleep 1
-  else
+  if [ $NOBSK -eq 0 ]; then
     echo "##########################"
     echo "  Blockchain Starter Kit  "
     echo "##########################"
     sleep 2
     echo "...Installing..."
     sleep 1
-    source setup/komodo.sh
+    source setup/bsk-install.sh
+  fi
+  if [ $NOBSK -eq 1 ]; then
+    echo "Komodo & Blockchain Starter Kit Install Skipped..."
+    sleep 2
+    echo "No dev wallet to install"
+    sleep 2
+  else
     setup_devwallet
   fi
   source setup/console.sh

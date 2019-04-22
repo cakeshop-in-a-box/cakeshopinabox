@@ -3,6 +3,13 @@ source setup/bsk1n.sh
 source setup/bsk.sh
 
 function submenu_maint {
+
+	if [ $DEBUG -eq 1 ]; then
+		debug_info
+		echo "Maint"
+		sleep 3
+	fi
+
 while true
 do
 
@@ -37,4 +44,5 @@ case $menuitem in
 	Back) echo "Bye"; break;;
 esac
 done
+
 }

@@ -201,6 +201,12 @@ if [ -z "${STORAGE_ROOT:-}" ]; then
 	STORAGE_ROOT=$([[ -z "${DEFAULT_STORAGE_ROOT:-}" ]] && echo "/home/$STORAGE_USER" || echo "$DEFAULT_STORAGE_ROOT")
 fi
 
+if [ -z "${DEFAULT_NOBSK:-}" ]; then
+  NOBSK=$NOBSK
+else
+  NOBSK=$DEFAULT_NOBSK
+fi
+
 # Show the configuration, since the user may have not entered it manually.
 echo
 echo "Primary Hostname: $PRIMARY_HOSTNAME"

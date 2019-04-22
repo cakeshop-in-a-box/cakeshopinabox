@@ -1,3 +1,5 @@
+
+function install_komodo {
 cd ~
 #echo "Removing old komodo dir..."
 #rm -Rf ~/komodo
@@ -57,3 +59,4 @@ sleep 2
 echo "Get ready to select chains to sync!!"
 sleep 3
 
+}
