@@ -10,7 +10,11 @@ cd komodo
 KMD_SRC=`pwd`
 hide_output git checkout dev
 echo "Fetching zcash parameters..."
-hide_output ./zcutil/fetch-params.sh
+if [ $DEBUG -eq 1 ]; then
+	./zcutil/fetch-params.sh
+else
+	hide_output ./zcutil/fetch-params.sh
+fi
 echo "Updating to latest komodo src..."
 hide_output git pull
 echo "Buidling komodo..."

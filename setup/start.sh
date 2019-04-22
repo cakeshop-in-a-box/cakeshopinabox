@@ -257,7 +257,8 @@ else
   fi
   source setup/nanomsg.sh
   if [ $NOBSK -eq 1 ]; then
-
+    echo "No BSK option detected, no komodo default install"
+    sleep 1
   else
     echo "##########################"
     echo "  Blockchain Starter Kit  "
