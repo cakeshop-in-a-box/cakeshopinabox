@@ -3,6 +3,29 @@
 #####################################################
 INSTALL_DIR=`pwd`
 
+for cakeshoparg in "$@"
+do
+ echo $cakeshoparg
+done
+
+cat > cakeshopinabox << EOF;
+#!/bin/bash
+cd `pwd`
+source setup/start.sh "\$@"
+EOF
+chmod +x cakeshopinabox
+
+
+if [ "$1" == "quick" ]; then
+	echo "This is quick"
+fi
+
+if [ "$1" == "debug" ]; then
+	echo "debug"
+fi
+
+exit
+
 source setup/functions.sh # load our functions
 
 # Check system setup: Are we running as root on Ubuntu 18.04 on a
@@ -10,6 +33,8 @@ source setup/functions.sh # load our functions
 # If not, this shows an error and exits.
 source setup/preflight.sh
 
+source setup/console.sh
+exit
 
 # Ensure Python reads/writes files in UTF-8. If the machine
 # triggers some other locale in Python, like ASCII encoding,
