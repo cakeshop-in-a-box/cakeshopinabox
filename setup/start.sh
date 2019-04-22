@@ -2,44 +2,71 @@
 # This is the entry point for configuring the system.
 #####################################################
 INSTALL_DIR=`pwd`
+NOSYSCHECK=0
+DEBUG=0
+RECONFIGURE=0
+
+source setup/functions.sh # load our functions
 
 for cakeshoparg in "$@"
 do
- echo $cakeshoparg
+  if [ "$cakeshoparg" == "nosyscheck" ]; then
+	echo "No syscheck option enabled"
+	NOSYSCHECK=1
+  fi
+
+  if [ "$cakeshoparg" == "debug" ]; then
+	echo "Debug enabled, showing full outputs & saving to log"
+	DEBUG=1
+  fi
+
+  if [ "$cakeshoparg" == "reconfigure" ]; then
+	echo "Reconfiguring cakeshopinabox"
+	RECONFIGURE=1
+  fi
 done
 
-cat > cakeshopinabox << EOF;
-#!/bin/bash
-cd `pwd`
-source setup/start.sh "\$@"
-EOF
-chmod +x cakeshopinabox
-
-
-if [ "$1" == "quick" ]; then
-	echo "This is quick"
+if [ $RECONFIGURE -eq 1 ]; then
+	if [ $DEBUG -eq 1 ]; then
+		debug_info
+		echo "Reconfiguring.  This is equivalent to rm /etc/cakeshopinabox.conf"
+		echo "setup/questions.sh"
+		sleep 1
+		exit
+	fi
+	rm /etc/cakeshopinabox.conf
+	source setup/questions.sh
 fi
 
-if [ "$1" == "debug" ]; then
-	echo "debug"
-fi
+echo "Entering cakeshopinabox start"
+sleep 1
 
-exit
-
-source setup/functions.sh # load our functions
 
 # Check system setup: Are we running as root on Ubuntu 18.04 on a
 # machine with enough memory? Is /tmp mounted with exec.
 # If not, this shows an error and exits.
+if [ $DEBUG -eq 1 ]; then
+	debug_info
+	echo "# Check system setup: Are we running as root on Ubuntu 18.04 on a"
+	echo "# machine with enough memory? Is /tmp mounted with exec."
+	echo "# If not, this shows an error and exits."
+	sleep 1
+fi
 source setup/preflight.sh
-
-source setup/console.sh
-exit
 
 # Ensure Python reads/writes files in UTF-8. If the machine
 # triggers some other locale in Python, like ASCII encoding,
 # Python may not be able to read/write files. This is also
 # in the management daemon startup script and the cron script.
+
+if [ $DEBUG -eq 1 ]; then
+	debug_info
+	echo "# Ensure Python reads/writes files in UTF-8. If the machine"
+	echo "# triggers some other locale in Python, like ASCII encoding,"
+	echo "# Python may not be able to read/write files. This is also"
+	echo "# in the management daemon startup script and the cron script."
+	sleep 1
+fi
 
 if ! locale -a | grep en_US.utf8 > /dev/null; then
     # Generate locale if not exists
@@ -55,9 +82,9 @@ export LC_TYPE=en_US.UTF-8
 # Fix so line drawing characters are shown correctly in Putty on Windows. See #744.
 export NCURSES_NO_UTF8_ACS=1
 
-#SKIP THIS - file will never be called cakeshop1.conf
 # Recall the last settings used if we're running this a second time.
 if [ -f /etc/cakeshopinabox.conf ]; then
+	# Migrate is originally from mailinabox, not used in cakeshopinabox
 	# Run any system migrations before proceeding. Since this is a second run,
 	# we assume we have Python already installed.
 #	setup/migrate.py --migrate || exit 1
@@ -67,17 +94,25 @@ if [ -f /etc/cakeshopinabox.conf ]; then
 	cat /etc/cakeshopinabox.conf | sed s/^/DEFAULT_/ > /tmp/cakeshopinabox.prev.conf
 	source /tmp/cakeshopinabox.prev.conf
 	rm -f /tmp/cakeshopinabox.prev.conf
-	PROVIDE_ADMIN=1
+	PROVIDE_ADMIN=1 # deprecated
+	CONSOLE=1  # Same as PROVIDE_ADMIN
 else
 	FIRST_TIME_SETUP=1
 fi
 
 # Put a start script in a global location. We tell the user to run 'cakeshop'
 # in the first dialog prompt, so we should do this before that starts.
+
+if [ $DEBUG -eq 1 ]; then
+	debug_info
+	echo "# Put a start script in a global location. We tell the user to run 'cakeshopinabox'"
+	echo "# in the first dialog prompt, so we should do this before that starts."
+	sleep 1
+fi
 cat > /usr/local/bin/cakeshopinabox << EOF;
 #!/bin/bash
 cd `pwd`
-source setup/start.sh
+source setup/start.sh "\$@"
 EOF
 chmod +x /usr/local/bin/cakeshopinabox
 
@@ -85,7 +120,28 @@ chmod +x /usr/local/bin/cakeshopinabox
 # if values have not already been set in environment variables. When running
 # non-interactively, be sure to set values for all! Also sets STORAGE_USER and
 # STORAGE_ROOT.
+if [ $DEBUG -eq 1 ]; then
+	debug_info
+	echo "# Ask the user for the PRIMARY_HOSTNAME, PUBLIC_IP, and PUBLIC_IPV6,"
+	echo "# if values have not already been set in environment variables. When running"
+	echo "# non-interactively, be sure to set values for all! Also sets STORAGE_USER and"
+	echo "# STORAGE_ROOT."
+	echo ""
+	echo "If /etc/cakeshopinabox.conf exists, the settings are used to skip the questions"
+	echo "To change/reconfigure existing settings please run:"
+	echo "	cakeshopinabox reconfigure"
+	sleep 1
+fi
 source setup/questions.sh
+
+
+if [ $DEBUG -eq 1 ];then
+	debug_info
+	echo "Network checks and a storage user"
+	echo "Both of these don't hinder system functionality"
+	echo "But are originally from mailinabox"
+	sleep 1
+fi
 
 # Run some network checks to make sure setup on this machine makes sense.
 # Skip on existing installs since we don't want this to block the ability to
@@ -113,6 +169,13 @@ fi
 #fi
 
 
+if [ $DEBUG -eq 1 ]; then
+	debug_info
+	echo "# Save the global options in /etc/cakeshopinabox.conf so that standalone"
+	echo "# tools know where to look for data."
+	sleep 1
+fi
+
 # Save the global options in /etc/cakeshopinabox.conf so that standalone
 # tools know where to look for data.
 cat > /etc/cakeshopinabox.conf << EOF;
@@ -130,17 +193,40 @@ if [ ! -z "${PROVIDE_ADMIN:-}" ];then
   sleep 1
   source setup/console.sh
 else
-  echo "First install"
+  echo "Thanks for choosing Cakeshop-In-a-Box"
+  echo "This blockchain installer is public domain software"
+  echo "It is inspired by mailinabox and not possible with their initial contribution"
+  echo ""
+  echo "Feedback welcome on github (https://github.com/cakeshop-in-a-box/cakeshopinabox)"
+  echo "First install..."
   sleep 2
   # Start service configuration.
-  init_pubkey
-  source setup/pubkey.sh
+# Deprecated, now using DEV WALLET.  Maybe usable in future.
+#  init_pubkey
+#  source setup/pubkey.sh
+  if [ $DEBUG -eq 1 ]; then
+    debug_info
+    echo "Start service configuration"
+    echo "Setup the system"
+    echo "setup/system.sh"
+    sleep 1
+  fi
   source setup/system.sh
   #source setup/ssl.sh
   #source setup/web.sh
   #source setup/management.sh
   #source setup/munin.sh
+  if [ $DEBUG -eq 1 ]; then
+    debug_info
+    echo "nanomsg is a requirement of many blockchains"
+    sleep 1
+  fi
   source setup/nanomsg.sh
+  echo "##########################"
+  echo "  Blockchain Starter Kit  "
+  echo "##########################"
+  sleep 2
+  exit
   source setup/komodo.sh
   setup_devwallet
   source setup/console.sh

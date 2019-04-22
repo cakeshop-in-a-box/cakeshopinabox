@@ -757,3 +757,8 @@ function delete_blockchain_data_kmdice {
     sleep 2
   fi
 }
+
+function debug_info {
+        echo "Debug::Info..."
+        echo "##############"
+}
