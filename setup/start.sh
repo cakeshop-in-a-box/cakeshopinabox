@@ -1,6 +1,28 @@
 #!/bin/bash
 # This is the entry point for configuring the system.
 #####################################################
+echo "This is Cakeshop-In-a-Box"
+if [ "$1" == "help" ]; then
+	echo "To run cakeshopinabox, run:"
+	echo "  cakeshopinabox"
+	echo ""
+	echo "Command arguments are:"
+	echo "  cakeshopinabox nobsk - skips blockchain starter kit & komodo install"
+	echo "  cakeshopinabox reconfigure - asks the installation questions again"
+	echo "  cakeshopinabox update - pulls latest console updates but leaves blockchain src alone"
+	echo "  cakeshop debug - runs in more verbose mode without hiding output from commands"
+	echo "  cakeshop auto  - runs in unattended mode with a blockchain starter kit on UTC timezone (TODO)"
+	echo "  cakeshop \"https://url/config.json\" - runs in unattended mode fetching a json configuration (TODO)"
+	exit
+fi
+
+if [ "$1" == "version" ]; then
+	echo "TODO"
+	echo "No version info available at this stage"
+	echo "Current Version: n/a"
+	echo "Latest Version: n/a"
+fi
+
 INSTALL_DIR=`pwd`
 NOSYSCHECK=0
 DEBUG=0
@@ -23,6 +45,18 @@ do
   if [ "$cakeshoparg" == "reconfigure" ]; then
 	echo "Reconfiguring cakeshopinabox"
 	RECONFIGURE=1
+  fi
+
+  if [ "$cakeshoparg" == "nobsk" ]; then
+	echo "Skipping blockchain starter kit (bsk) on install"
+	RECONFIGURE=1
+  fi
+
+  if [ "$cakeshoparg" == "help" ]; then
+	echo "Detected help, abandoning"
+	echo "Instead run:"
+	echo "  cakeshopinabox help"
+	exit
   fi
 done
 
@@ -222,13 +256,18 @@ else
     sleep 1
   fi
   source setup/nanomsg.sh
-  echo "##########################"
-  echo "  Blockchain Starter Kit  "
-  echo "##########################"
-  sleep 2
-  exit
-  source setup/komodo.sh
-  setup_devwallet
+  if [ $NOBSK -eq 1 ]; then
+
+  else
+    echo "##########################"
+    echo "  Blockchain Starter Kit  "
+    echo "##########################"
+    sleep 2
+    echo "...Installing..."
+    sleep 1
+    source setup/komodo.sh
+    setup_devwallet
+  fi
   source setup/console.sh
 fi
 # Wait for the management daemon to start...
