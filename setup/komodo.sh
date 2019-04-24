@@ -20,11 +20,11 @@ KMD_SRC=`pwd`
 echo "Checking out $KOMODO_BRANCH branch"
 hide_output git checkout $KOMODO_BRANCH
 echo "Fetching zcash parameters..."
-# hide_output ./zcutil/fetch-params.sh
+hide_output ./zcutil/fetch-params.sh
 echo "Updating to latest komodo src..."
 hide_output git pull
 echo "Buidling komodo..."
-# hide_output ./zcutil/build.sh -j$(nproc)
+hide_output ./zcutil/build.sh -j$(nproc)
 localrev=$(git rev-parse HEAD)
 sudo echo "KMD_BUILD_COMMIT=$localrev" >> /etc/cakeshopinabox.conf
 sleep 5
@@ -63,28 +63,3 @@ sleep 2
 echo "Get ready to select chains to sync!!"
 sleep 3
 
-while true
-do
-
-### display main menu ###
-dialog --clear  --help-button --backtitle "Start blockchain" \
---title "[ S Y N C - C H A I N ]" \
---menu "You can use the UP/DOWN arrow keys, the first \n\
-letter of the choice as a hot key, or the \n\
-number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
-KMDICE "Sync & Start KMDICE" \
-REKT0 "Sync & Start PEGS - REKT0" \
-Exit "Exit to the shell" 2>"${INPUT}"
-
-menuitem=$(<"${INPUT}")
-
-
-# make decsion
-case $menuitem in
-	KMD) start_komodo;;
-	KMDICE) start_kmdice;;
-	REKT0) start_pegs_REKT0;;
-	Exit) echo "Bye"; break;;
-esac
-done

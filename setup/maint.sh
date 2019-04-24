@@ -20,6 +20,7 @@ VERUS "(development Q2 2019)" \
 BSK_1_HOST "Blockchain Starer Kit - single node seed & mining" \
 BSK "Blockchain Starter Kit - (experimental) seed node or mining node" \
 NEW_DEV_WALLET "Create a new dev wallet to import on blockchains" \
+REKT0 "Sync & Start PEGS - REKT0" \
 Back "Back a menu" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
@@ -31,6 +32,7 @@ case $menuitem in
 	HUSH3CONSOLE) submenu_hush3;;
 	CHIPS) install_chips;;
 	VERUS) install_verus;;
+	REKT0) start_pegs_REKT0;;
 	BSK_1_HOST) bsk1n;;
 	BSK) bsk;;
 	NEW_DEV_WALLET) setup_devwallet;;
