@@ -33,6 +33,8 @@ export NCURSES_NO_UTF8_ACS=1
 #SKIP THIS - file will never be called cakeshop1.conf
 # Recall the last settings used if we're running this a second time.
 if [ -f /etc/cakeshopinabox.conf ]; then
+	echo "Not the first run..."
+	sleep 1
 	# Run any system migrations before proceeding. Since this is a second run,
 	# we assume we have Python already installed.
 #	setup/migrate.py --migrate || exit 1
@@ -98,6 +100,7 @@ PUBLIC_IP=$PUBLIC_IP
 PUBLIC_IPV6=$PUBLIC_IPV6
 PRIVATE_IP=$PRIVATE_IP
 PRIVATE_IPV6=$PRIVATE_IPV6
+KOMODO_BRANCH=$KOMODOBRANCHCHOICE
 EOF
 
 if [ ! -z "${PROVIDE_ADMIN:-}" ];then
