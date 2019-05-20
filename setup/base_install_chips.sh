@@ -31,7 +31,7 @@ done
 
 function install_lightning {
 cd $HOME
-sudo apt-get -y install software-properties-common autoconf git build-essential libtool libprotobuf-c-dev libgmp-dev libsqlite3-dev python python3 zip jq libevent-dev pkg-config libssl-dev libcurl4-gnutls-dev cmake libboost-all-dev automake jq libdb++-dev
+#sudo apt-get -y install software-properties-common autoconf git build-essential libtool libprotobuf-c-dev libgmp-dev libsqlite3-dev python python3 zip jq libevent-dev pkg-config libssl-dev libcurl4-gnutls-dev cmake libboost-all-dev automake jq libdb++-dev
 git clone https://github.com/jl777/lightning
 cd lightning
 make
@@ -40,20 +40,23 @@ sudo ln -sf ${PWD}/lightningd/lightningd /usr/local/bin/lightning
 
 function install_chips {
 cd $HOME
-sudo apt-get -y install software-properties-common autoconf git build-essential libtool libprotobuf-c-dev libgmp-dev libsqlite3-dev python python3 zip jq libevent-dev pkg-config libssl-dev libcurl4-gnutls-dev cmake libboost-all-dev automake jq libdb++-dev
+sudo apt-get -y install software-properties-common autoconf git build-essential libtool libprotobuf-c-dev libgmp-dev libsqlite3-dev python python3 zip jq libevent-dev pkg-config libssl-dev libcurl4-gnutls-dev cmake libboost-all-dev automake jq 
 git clone https://github.com/jl777/chips3.git
 cd chips3
+CHIPSDIR=$PWD
+echo "CHIPSDIR is $CHIPSDIR"
+sleep 3
 git checkout dev
 wget https://github.com/imylomylo/docker-chipsd-lightning/raw/master/db-4.8.30.NC.tar.gz
 tar zxvf db-4.8.30.NC.tar.gz
 cd db-4.8.30.NC/build_unix
-../dist/configure -enable-cxx -disable-shared -with-pic -prefix=/chips3/db4
+../dist/configure -enable-cxx -disable-shared -with-pic -prefix=${CHIPSDIR}/db4
 make -j2
 sudo make install
 cd $HOME
 cd chips3
 ./autogen.sh
-./configure LDFLAGS="-L/chips3/db4/lib/" CPPFLAGS="-I${PWD}/db4/include/" -without-gui -without-miniupnpc --disable-tests --disable-bench --with-gui=no && \
+./configure LDFLAGS="-L${CHIPSDIR}/db4/lib/" CPPFLAGS="-I${CHIPSDIR}/db4/include/" -without-gui -without-miniupnpc --disable-tests --disable-bench --with-gui=no && \
 make -j2
 sudo ln -sf ${PWD}/src/chipsd /usr/local/bin/chipsd
 sudo ln -sf ${PWD}/src/chips-cli /usr/local/bin/chips-cli
