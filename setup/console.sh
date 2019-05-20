@@ -2,6 +2,7 @@ cd $INSTALL_DIR
 if [ ! -f /root/.devwallet ]; then
   setup_devwallet
 fi
+source setup/chips.sh
 source setup/kmdice.sh
 source setup/pirate.sh
 source setup/regtest.sh
@@ -17,9 +18,7 @@ dialog --clear  --help-button --backtitle "Cakeshop Console" \
 letter of the choice as a hot key, or the \n\
 number keys 1-9 to choose an option.\n\
 Choose the TASK" 25 120 14 \
-KMDICE "KMDICE - the mineable provably fair chain" \
-PIRATE "PIRATE - ARRR an enforced privary chain" \
-REGTEST "Give me devmode - start single user dev chain" \
+CHIPS "CHIPS - play decentralized poker" \
 MAINT "Maintenance menu" \
 Exit "Exit to the shell" 2>"${INPUT}"
 
@@ -30,6 +29,7 @@ menuitem=$(<"${INPUT}")
 case $menuitem in
 	REGTEST) submenu_regtest;;
 	KMDICE) submenu_kmdice;;
+	CHIPS) submenu_chips;;
 	PIRATE) submenu_pirate;;
 	MAINT) submenu_maint;;
 	Exit) echo "Bye"; break;;

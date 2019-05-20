@@ -100,8 +100,8 @@ PUBLIC_IP=$PUBLIC_IP
 PUBLIC_IPV6=$PUBLIC_IPV6
 PRIVATE_IP=$PRIVATE_IP
 PRIVATE_IPV6=$PRIVATE_IPV6
-KOMODO_BRANCH=$KOMODOBRANCHCHOICE
 EOF
+#KOMODO_BRANCH=dollarKOMODOBRANCHCHOICE
 
 if [ ! -z "${PROVIDE_ADMIN:-}" ];then
   echo "Providing console"
@@ -119,8 +119,9 @@ else
   #source setup/management.sh
   #source setup/munin.sh
   source setup/nanomsg.sh
-  source setup/komodo.sh
-  setup_devwallet
+  source setup/choosebase.sh
+  #source setup/komodo.sh
+  #setup_devwallet
   source setup/console.sh
 fi
 # Wait for the management daemon to start...
